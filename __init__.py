@@ -65,6 +65,20 @@ class RemarkablePlugin(DevicePlugin):
         self.conn = connection.Connection(ssh, sftp)
         self.document_root = documents.DocumentRoot(self.conn)
 
+        # Lets get some information about the device while we're here
+
+        # The version of busybox on the remarkable tablet doesn't seem to support `-B 1`, so lets just get the total size
+        # in 1024-byte blocks and multiple by 1024
+        stdin, stdout, stderr = ssh.exec_command(
+            "df -k | grep \"/dev/mmcblk1p7\" -m 1 | awk '{print $2}'"
+        )
+        self.device_total_space = 1024 * int(stdout.read())
+
+        stdin, stdout, stderr = ssh.exec_command(
+            "df -k | grep \"/dev/mmcblk1p7\" -m 1 | awk '{print $4}'"
+        )
+        self.device_free_space = 1024 * int(stdout.read())
+
         print(f"opened device: {self.document_root}")
 
     def eject(self):
@@ -79,7 +93,7 @@ class RemarkablePlugin(DevicePlugin):
 
     @classmethod
     def add_books_to_metadata(cls, locations, metadata, booklists):
-        pass
+        print("Adding books to metadata")
 
     def books(self, oncard=None, end_session=True):
         # TODO - The user should be able to define an on-device library path - via the configuration - default to "/"
@@ -88,12 +102,16 @@ class RemarkablePlugin(DevicePlugin):
         rbl = RemarkableBookList("What", "Are", "These")
         return rbl
 
+    def sync_booklists(self, booklist, end_session=True):
+        print("Returning empty booklist")
+        rbl = self.books()
+        return (rbl, rbl, rbl)
 
     def get_device_information(self, end_session=True):
         return ("TODO", "TODO", "TODO", "TODO")
 
     def set_progress_reporter(self, report_progress):
-        pass
+        print("set progress reporter")
 
     def card_prefix(self, end_session=True):
         return (None, None)
@@ -104,6 +122,9 @@ class RemarkablePlugin(DevicePlugin):
         Preferences->Plugins
         """
         return True
+
+    def settings(self):
+        return Opts(self.FORMATS)
 
     def save_settings(self, config_widget):
         """
@@ -128,20 +149,30 @@ class RemarkablePlugin(DevicePlugin):
         self.remarkable_password: str = prefs["password"]
 
     def free_space(self, end_session=True):
-        return (1000000000000000000, 100000000000000000, 1000000000000000000)
+        return (self.device_free_space, -1, -1)
 
     def total_space(self, end_session=True):
-        return (1000000000000000000, 100000000000000000, 1000000000000000000)
+        return (self.device_total_space, -1, -1)
 
     def config_widget(self):
         from calibre_plugins.remarkable_plugin.config import ConfigWidget
 
         return ConfigWidget()
 
-class Book(Metadata):
-    def __init__(self, title=None, authors=None, size=None, datetime=None, path=None, thumbnail=None, tags=[]):
 
-        Metadata.__init__(self, '')
+class Book(Metadata):
+    def __init__(
+        self,
+        title=None,
+        authors=None,
+        size=None,
+        datetime=None,
+        path=None,
+        thumbnail=None,
+        tags=[],
+    ):
+
+        Metadata.__init__(self, "")
         self._new_book = False
         self.device_collections = []
 
@@ -152,6 +183,7 @@ class Book(Metadata):
         self.path = path
         self.thumbnail = thumbnail
         self.tags = tags
+
 
 class RemarkableBookList(BookList):
     def __init__(self, oncard, prefix, settings):
@@ -168,3 +200,8 @@ class RemarkableBookList(BookList):
 
     def get_collections(self, collection_attributes):
         return {}
+
+
+class Opts:
+    def __init__(self, format_map):
+        self.format_map = format_map
