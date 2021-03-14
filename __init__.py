@@ -67,8 +67,8 @@ class RemarkablePlugin(DevicePlugin):
 
         # Lets get some information about the device while we're here
 
-        # The version of busybox on the remarkable tablet doesn't seem to support `-B 1`, so lets just get the total size
-        # in 1024-byte blocks and multiple by 1024
+        # The version of busybox on the remarkable tablet doesn't seem to support `-B 1`,
+        # so lets just get the total size in 1024-byte blocks and multiple by 1024
         stdin, stdout, stderr = ssh.exec_command(
             "df -k | grep \"/dev/mmcblk1p7\" -m 1 | awk '{print $2}'"
         )
@@ -83,13 +83,34 @@ class RemarkablePlugin(DevicePlugin):
 
     def eject(self):
         self.seen_device = False
-
         # Restart xochitl on eject so that any new files will show up
         on_finish = "systemctl restart xochitl"
         self.conn.ssh.exec_command(on_finish)
 
+    def shutdown(self):
+        return self.eject()
+
+    def stop_plugin(self):
+        return self.eject()
+
     def upload_books(self, files, names, on_card=None, end_session=True, metadata=None):
-        print("Uploading book")
+        # Currently everything is being uploaded under /
+        print(f"Uploading {len(files)} books")
+        for i, file in enumerate(files):
+            with open(file, 'rb') as f:
+                # TODO - Check if we have enough space on device to upload
+                name = names[i]
+                new_doc = self.document_root.new_document(name)
+                new_doc.write(0, f.read())
+                new_doc.save()
+            print(f"Uploaded {file}")
+        print("Finished uploading books")
+
+    def delete_books(self, paths, end_session=True):
+        '''
+        Delete books at paths on device.
+        '''
+        raise NotImplementedError()
 
     @classmethod
     def add_books_to_metadata(cls, locations, metadata, booklists):
@@ -97,7 +118,6 @@ class RemarkablePlugin(DevicePlugin):
 
     def books(self, oncard=None, end_session=True):
         # TODO - The user should be able to define an on-device library path - via the configuration - default to "/"
-
         # For now return an empty book list. Need to figure out how to store and retreive metadata from remarkable
         rbl = RemarkableBookList("What", "Are", "These")
         return rbl
@@ -156,7 +176,6 @@ class RemarkablePlugin(DevicePlugin):
 
     def config_widget(self):
         from calibre_plugins.remarkable_plugin.config import ConfigWidget
-
         return ConfigWidget()
 
 

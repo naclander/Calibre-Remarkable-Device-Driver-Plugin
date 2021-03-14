@@ -15,6 +15,7 @@ class ConfigWidget(QWidget):
         self.layout.setSpacing(10)
 
         self.ip_label = QLabel("Remarkable IP:")
+
         self.layout.addWidget(self.ip_label, 1, 0)
 
         self.ip_label_msg = QLineEdit(self)
