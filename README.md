@@ -1,4 +1,4 @@
-A Calibre Plugin To Sync Books With Your Remarkable Tablet
+Sync your books to Remarkable with Calibre
 ==========================================================
 This Calibre plugin implements Calibre's [Device Plugin](https://manual.calibre-ebook.com/plugins.html#module-calibre.devices.interface), 
 making the Remarkable  Tablet a device Calibre can communicate with, similar to other supported Ebook readers. 
