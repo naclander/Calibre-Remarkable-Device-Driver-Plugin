@@ -38,8 +38,9 @@ Once the plugin is installed and configured
 
 Development
 -----------
-Git clone this repository. After making the desired changes, run `calibre-customize -b ./ && calibre-debug -g ` from the
-root project directory to install the latest version of this plugin and launch Calibre.
+Git clone this repository. First run `create-plugin-zip.sh` in order to install the local dependencies. After making
+the desired changes, run `calibre-customize -b ./ && calibre-debug -g ` from the  root project directory to install the
+latest version of this plugin and launch Calibre.
 
 Ensure all plugin functionality still works and submit a patch.
 
