@@ -9,13 +9,14 @@ from typing import List
 from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
-import paramiko
 import time
 
 import sys
-# Use the remarkable-fs module that's included with the plugin
-sys.path.append("remarkable-fs")
+
+# Use the plaugins directory that's included with the plugin
+sys.path.append("remarkable-device-driver-plugins")
 import remarkable_fs
+import paramiko
 
 
 class RemarkablePlugin(DevicePlugin):
