@@ -13,17 +13,12 @@ import time
 
 import sys
 
-# Use the plaugins directory that's included with the plugin
-sys.path.append("remarkable-device-driver-plugins")
-import remarkable_fs
-import paramiko
-
-
 class RemarkablePlugin(DevicePlugin):
     name = "Remarkable Plugin"
     description = "Send files to Remarkable"
-    supported_platforms = ["linux"]
-    version = (0, 0, 1)  # The version number of this plugin
+    author = "Nathan Aclander"
+    supported_platforms = ["linux", "windows"]
+    version = (1, 1, 0)  # The version number of this plugin
     minimum_calibre_version = (0, 7, 53)
 
     FORMATS = ["epub", "pdf"]
@@ -31,6 +26,13 @@ class RemarkablePlugin(DevicePlugin):
     MANAGES_DEVICE_PRESENCE = True
 
     def startup(self):
+        # Use the plaugins directory that's included with the plugin
+        sys.path.append(self.plugin_path)
+        global remarkable_fs
+        global paramiko
+        import remarkable_fs
+        import paramiko
+
         # Currently we only support 1 device. Use this variable to remember if we've already seen it or not so as to
         # not keep detecting it. If for some reason we decide to support multiple devices, we should probably change this
         # to a list, maybe.
