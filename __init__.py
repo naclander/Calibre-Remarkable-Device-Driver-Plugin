@@ -18,7 +18,7 @@ class RemarkablePlugin(DevicePlugin):
     description = "Send files to Remarkable"
     author = "Nathan Aclander"
     supported_platforms = ["linux", "windows", "osx"]
-    version = (1, 1, 0)  # The version number of this plugin
+    version = (1, 2, 1)  # The version number of this plugin
     minimum_calibre_version = (0, 7, 53)
 
     FORMATS = ["epub", "pdf"]
