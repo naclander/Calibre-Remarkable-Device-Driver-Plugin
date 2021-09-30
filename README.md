@@ -33,8 +33,11 @@ you can customize:
 
 Usage
 -----
-Once the plugin is installed and configured
+Once the plugin is installed and configured, the plugin should work automatically. At Calibre startup, the plugin will attempt to find your Remarkable device, and ssh to it. If it succeeds you should see "Device" button at the top which shows your books on your Remarkable Tablet. 
 
+To send a book to your Remarkable Tablet, right click on the book, select "send to device" and then "send to main memory". The book will transfer and you should now see your book in the Device tab. If you want to remove a book, go to the Device tab, right click on the book and select to remove it.
+
+If you start Calibre and you don't see the Device tab, most likely Calibre was not able to find or connect to your Remarkable tablet. Try running Calibre in debug using `calibre-debug -g` and see the messages in the console regarding trying to connect to the device.
 
 Development
 -----------
