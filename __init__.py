@@ -18,7 +18,7 @@ class RemarkablePlugin(DevicePlugin):
     description = "Send files to Remarkable"
     author = "Nathan Aclander"
     supported_platforms = ["linux", "windows", "osx"]
-    version = (1, 2, 2)  # The version number of this plugin
+    version = (1, 2, 3)  # The version number of this plugin
     minimum_calibre_version = (0, 7, 53)
 
     FORMATS = ["epub", "pdf"]
@@ -28,7 +28,6 @@ class RemarkablePlugin(DevicePlugin):
     def startup(self):
         # Use the plugins directory that's included with the plugin
         sys.path.append(self.plugin_path)
-        breakpoint()
         global remarkable_fs
         global paramiko
         import remarkable_fs
