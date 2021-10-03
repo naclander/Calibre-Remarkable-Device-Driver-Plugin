@@ -18,7 +18,7 @@ class RemarkablePlugin(DevicePlugin):
     description = "Send files to Remarkable"
     author = "Nathan Aclander"
     supported_platforms = ["linux", "windows", "osx"]
-    version = (1, 2, 1)  # The version number of this plugin
+    version = (1, 2, 2)  # The version number of this plugin
     minimum_calibre_version = (0, 7, 53)
 
     FORMATS = ["epub", "pdf"]
@@ -26,8 +26,9 @@ class RemarkablePlugin(DevicePlugin):
     MANAGES_DEVICE_PRESENCE = True
 
     def startup(self):
-        # Use the plaugins directory that's included with the plugin
+        # Use the plugins directory that's included with the plugin
         sys.path.append(self.plugin_path)
+        breakpoint()
         global remarkable_fs
         global paramiko
         import remarkable_fs
@@ -82,7 +83,9 @@ class RemarkablePlugin(DevicePlugin):
         sftp.chdir("/home/root/.local/share/remarkable/xochitl")
 
         self.conn = remarkable_fs.connection.Connection(ssh, sftp)
+        print("Creating document root")
         self.document_root = remarkable_fs.documents.DocumentRoot(self.conn)
+        print("Finished creating document root")
 
         # Lets get some information about the device while we're here
 
