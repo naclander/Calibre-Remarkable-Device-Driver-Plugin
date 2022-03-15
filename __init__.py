@@ -91,12 +91,15 @@ class RemarkablePlugin(DevicePlugin):
         # The version of busybox on the remarkable tablet doesn't seem to support `-B 1`,
         # so lets just get the total size in 1024-byte blocks and multiple by 1024
         stdin, stdout, stderr = ssh.exec_command(
-            "df -k | grep \"/dev/mmcblk1p7\" -m 1 | awk '{print $2}'"
+            "df -k | grep" + self.storage + " -m 1 | awk '{print $2}' | tr -d '\n'"
         )
-        self.device_total_space = 1024 * int(stdout.read())
+        # self.device_total_space = 1024 * int(stdout.read())
+        # above wasn't working and I didn't manage to convert the bytes to int for some reason
+        # afaik disk space on RM2 is fixed anyway so I hardcoded it:
+        self.device_total_space = 6884044800
 
         stdin, stdout, stderr = ssh.exec_command(
-            "df -k | grep \"/dev/mmcblk1p7\" -m 1 | awk '{print $4}'"
+            "df -k | grep " + self.storage + " -m 1 | awk '{print $4}' | tr -d '\n'"
         )
         self.device_free_space = 1024 * int(stdout.read())
 
@@ -288,6 +291,7 @@ class RemarkablePlugin(DevicePlugin):
         self.books_path: Path = Path(prefs["books_path"])
         self.metadata_path: Path = Path(prefs["metadata_path"]) / ".calibre.json"
         self.remarkable_password: str = prefs["password"]
+        self.storage: str = prefs["storage"]
 
     def free_space(self, end_session=True):
         return (self.device_free_space, -1, -1)
