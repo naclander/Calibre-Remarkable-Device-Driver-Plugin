@@ -45,7 +45,7 @@ class ConfigWidget(QWidget):
         self.layout.addWidget(self.password_label_msg, 4, 1)
         self.password_label.setBuddy(self.password_label_msg)
 
-        self.storage_label = QLabel("Storage ( like '/dev/mmcblk2p4' ):")
+        self.storage_label = QLabel("Storage ( like '/dev/mmcblk1p7' ):")
         self.layout.addWidget(self.storage_label, 5, 0)
         self.storage_label_msg = QLineEdit(self)
         self.storage_label_msg.setText(prefs["storage"])
