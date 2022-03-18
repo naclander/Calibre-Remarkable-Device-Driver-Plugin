@@ -94,7 +94,7 @@ class RemarkablePlugin(DevicePlugin):
             "df -k | grep " + self.storage + " -m 1 | awk '{print $2}' | tr -d '\n'"
         )
         self.device_total_space = 1024 * int(stdout.read())
-        
+
         stdin, stdout, stderr = ssh.exec_command(
             "df -k | grep " + self.storage + " -m 1 | awk '{print $4}' | tr -d '\n'"
         )
