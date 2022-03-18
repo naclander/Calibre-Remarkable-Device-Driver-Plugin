@@ -8,7 +8,7 @@ prefs.defaults["ip"] = "10.11.99.1"
 prefs.defaults["books_path"] = "/"
 prefs.defaults["metadata_path"] = "/home/root/"
 prefs.defaults["password"] = ""
-prefs.defaults["storage"] = "/dev/mmcblk2p4"
+prefs.defaults["storage"] = "/dev/mmcblk1p7"
 
 
 class ConfigWidget(QWidget):
