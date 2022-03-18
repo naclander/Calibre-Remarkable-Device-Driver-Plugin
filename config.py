@@ -59,7 +59,6 @@ class ConfigWidget(QWidget):
     def save_settings(self):
         prefs["ip"] = self.ip_label_msg.text()
         # append an extra '/' in case it was forgotten
-        # this is why there's always that annoying extra '/' at the end >_<
         prefs["books_path"] = self.books_path_label_msg.text() + "/"
         prefs["metadata_path"] = self.metadata_path_label_msg.text() + "/"
         prefs["password"] = self.password_label_msg.text()
