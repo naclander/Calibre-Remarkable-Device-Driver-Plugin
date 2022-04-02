@@ -8,6 +8,7 @@ prefs.defaults["ip"] = "10.11.99.1"
 prefs.defaults["books_path"] = "/"
 prefs.defaults["metadata_path"] = "/home/root/"
 prefs.defaults["password"] = ""
+prefs.defaults["storage"] = "/dev/mmcblk1p7"
 
 
 class ConfigWidget(QWidget):
@@ -44,6 +45,13 @@ class ConfigWidget(QWidget):
         self.layout.addWidget(self.password_label_msg, 4, 1)
         self.password_label.setBuddy(self.password_label_msg)
 
+        self.storage_label = QLabel("Storage ( like '/dev/mmcblk1p7' ):")
+        self.layout.addWidget(self.storage_label, 5, 0)
+        self.storage_label_msg = QLineEdit(self)
+        self.storage_label_msg.setText(prefs["storage"])
+        self.layout.addWidget(self.storage_label_msg, 5, 1)
+        self.storage_label.setBuddy(self.storage_label_msg)
+
         self.setLayout(self.layout)
         self.setGeometry(150, 150, 150, 150)
         self.setWindowTitle("Remarkable Config")
@@ -54,3 +62,4 @@ class ConfigWidget(QWidget):
         prefs["books_path"] = self.books_path_label_msg.text() + "/"
         prefs["metadata_path"] = self.metadata_path_label_msg.text() + "/"
         prefs["password"] = self.password_label_msg.text()
+        prefs["storage"] = self.storage_label_msg.text()
