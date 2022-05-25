@@ -91,14 +91,11 @@ class RemarkablePlugin(DevicePlugin):
         # The version of busybox on the remarkable tablet doesn't seem to support `-B 1`,
         # so lets just get the total size in 1024-byte blocks and multiple by 1024
         stdin, stdout, stderr = ssh.exec_command(
-            "df -k | grep " + self.storage + " -m 1 | awk '{print $2}' | tr -d '\n'"
+            "df -k /home/root"
         )
-        self.device_total_space = 1024 * int(stdout.read())
-
-        stdin, stdout, stderr = ssh.exec_command(
-            "df -k | grep " + self.storage + " -m 1 | awk '{print $4}' | tr -d '\n'"
-        )
-        self.device_free_space = 1024 * int(stdout.read())
+        output = stdout.readlines()[-1]
+        self.device_total_space = 1024 * int(output.split()[1])
+        self.device_free_space = 1024 * int(output.split()[3])
 
         print(f"opened device: {self.document_root}")
 
