@@ -1,3 +1,5 @@
+I am no longer actively maintainig this plugin myself, but I will continue to accept patches if anyone contributes improvements. 
+
 Sync your books to Remarkable with Calibre
 ==========================================================
 This Calibre plugin implements Calibre's [Device Plugin](https://manual.calibre-ebook.com/plugins.html#module-calibre.devices.interface), 
