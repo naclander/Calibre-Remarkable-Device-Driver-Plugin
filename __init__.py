@@ -10,8 +10,9 @@ from dataclasses import dataclass, field, asdict
 from pathlib import Path
 
 import time
-
 import sys
+import os
+
 
 class RemarkablePlugin(DevicePlugin):
     name = "Remarkable Plugin"
@@ -26,25 +27,31 @@ class RemarkablePlugin(DevicePlugin):
     MANAGES_DEVICE_PRESENCE = True
 
     def startup(self):
-        # Use the plugins directory that's included with the plugin
+
         sys.path.append(self.plugin_path)
-        global remarkable_fs
-        global paramiko
-        import remarkable_fs
-        import paramiko
+        with self:
 
-        # Currently we only support 1 device. Use this variable to remember if we've already seen it or not so as to
-        # not keep detecting it. If for some reason we decide to support multiple devices, we should probably change this
-        # to a list, maybe.
-        self.seen_device = False
+            temp_unzip_path = [i for i in sys.path if i.endswith("unzip")][0]
+            temp_unzip_path = os.path.join(temp_unzip_path, "target")
+            sys.path.append(temp_unzip_path)
 
-        self.apply_settings()
+            global remarkable_fs
+            global paramiko
+            import remarkable_fs
+            import paramiko
 
-        self.booklist = RemarkableBookList("What", "Are", "These")
-        self.conn = None
-        self.document_root = None
-        self.device_total_space = None
-        self.device_free_space = None
+            # Currently we only support 1 device. Use this variable to remember if we've already seen it or not so as to
+            # not keep detecting it. If for some reason we decide to support multiple devices, we should probably change this
+            # to a list, maybe.
+            self.seen_device = False
+
+            self.apply_settings()
+
+            self.booklist = RemarkableBookList("What", "Are", "These")
+            self.conn = None
+            self.document_root = None
+            self.device_total_space = None
+            self.device_free_space = None
 
     def detect_managed_devices(self, devices_on_system, force_refresh=False):
         if self.seen_device:
@@ -340,7 +347,7 @@ class RemarkableBook:
     device_collections: List = field(default_factory=list)
 
     def __post_init__(self):
-        # When RemarkableBook is created from a json blob the argument is a n array and must be converted properly
+        # When RemarkableBook is created from a json blob the argument is an array and must be converted properly
         self.datetime = time.struct_time(self.datetime)
 
     def __eq__(self, other):
